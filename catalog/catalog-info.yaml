@@ -1,0 +1,13 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: "henrique"
+  annotations:
+    dev.azure.com/host-org: dev.azure.com/gavb-consulting
+    dev.azure.com/project-repo: "BU DEVOPS/henrique"
+    backstage.io/kubernetes-id: "henrique"
+    backstage.io/techdocs-ref: dir:.
+spec:
+  type: java
+  owner: user:guest
+  lifecycle: experimental

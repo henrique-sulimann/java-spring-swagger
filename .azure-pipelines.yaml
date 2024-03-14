@@ -1,0 +1,42 @@
+name: backstage
+
+pool: GAVB-GKE-RUNNER
+
+trigger:
+  batch: true
+variables:
+  DockerImageName: 'products-resources-dev/poc-backstage/henrique'
+  tag: '$(Build.BuildId)'
+stages:
+  - stage: Build
+    displayName: Build, Push
+    jobs:
+      - job: Build
+        steps:
+          - task: Docker@2
+            displayName: 'Login to Container Registry'
+            inputs:
+              command: login
+              containerRegistry: 'gcr-BU DEVOPS'
+          - task: Docker@2
+            displayName: 'Build and push image'
+            inputs:
+              Dockerfile: 'app/henrique/Dockerfile'
+              command: buildAndPush
+              repository: '$(DockerImageName)'
+              tag: |
+                $(tag)
+  - stage: Deploy
+    displayName: Deploy Kubernetes
+    dependsOn: Build
+    jobs:
+      - job: deploy
+        steps:
+          - bash: |
+              cd app/deployment/k8s/henrique
+              helm upgrade --install henrique ./ \
+              --namespace hsulimann --create-namespace \
+              --set=image.repository=gcr.io/products-resources-dev/poc-backstage/henrique \
+              --set=service.port=8086 \
+              --set=image.tag=$(tag)
+            displayName: 'Deploy on Kubernetes'

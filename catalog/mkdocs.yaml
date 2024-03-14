@@ -1,0 +1,9 @@
+site_name: "java-spring"
+site_description: "Description of java-spring"
+site_author: Henrique Sulimann
+
+plugins:
+  - techdocs-core
+
+nav:
+  - Introduction: 'index.md'
